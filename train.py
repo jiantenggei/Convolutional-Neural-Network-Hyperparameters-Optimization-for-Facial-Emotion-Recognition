@@ -17,10 +17,13 @@ def train():
     batch_size = 128
     # 加载数据集
     lr = 1e-3
-    epochs = 20
+    epochs = 720
     num_classes=7 #你的分类数
     train_datagen = ImageDataGenerator( #数据集增强，这些参数查阅keras 官方文档 我前面的博客VGG 中 说明过也有介绍说
         rescale=1 / 255.0,
+        rotation_range = 10,
+        zoom_range = 0.1,
+        horizontal_flip = True
        )
 
     train_generator = train_datagen.flow_from_directory(
@@ -46,7 +49,7 @@ def train():
         seed=42
     )
     test_gen = test_datagen.flow_from_directory(
-        directory=val_dataset_path,
+        directory=test_dataset_path,
         target_size=(48, 48),
         color_mode="grayscale",
         class_mode="categorical",
@@ -55,7 +58,7 @@ def train():
         seed=42
     )
     #你的模型，模型参数自己调试
-    model = create_model()
+    model = create_model(num_classes=num_classes)
 
     model.summary()
     training_weights='./weights'  #这里是保存每次训练权重的  如果需要自己取消注释
